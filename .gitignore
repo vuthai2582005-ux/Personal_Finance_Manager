@@ -1,0 +1,18 @@
+# NetBeans build outputs
+/build/
+/dist/
+
+# NetBeans private configurations (local server paths, private keys)
+/nbproject/private/
+/nb-configuration.xml
+
+# Compiled Java class files
+*.class
+
+# Server log files
+*.log
+*.txt
+
+# OS system files
+.DS_Store
+Thumbs.db
