@@ -426,7 +426,7 @@ async function loadAccountsTab() {
             tbody.innerHTML += `
                 <tr>
                     <td><strong>${a.accountName}</strong></td>
-                    <td>${a.accountType}</td>
+                    <td>${a.accountType === 'CASH' ? 'Tiền mặt' : a.accountType === 'BANK' ? 'Ngân hàng' : a.accountType === 'E_WALLET' ? 'Ví điện tử' : a.accountType === 'CREDIT_CARD' ? 'Thẻ tín dụng' : a.accountType === 'SAVINGS' ? 'Tiết kiệm' : a.accountType}</td>
                     <td style="text-align: right; font-weight: 600;">${formatCurrency(a.balance)}</td>
                     <td>${statusBadge}</td>
                     <td style="text-align: right;">
