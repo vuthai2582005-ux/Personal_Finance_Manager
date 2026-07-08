@@ -139,6 +139,35 @@ public class TransactionController {
             return "Định dạng ngày không hợp lệ (yêu cầu dd/MM/yyyy).";
         }
 
+        // Kiểm tra số dư tài khoản có đủ không (đối với giao dịch CHI TIÊU)
+        if ("EXPENSE".equals(type)) {
+            Account acc = accountDAO.findById(accountId);
+            if (acc != null) {
+                BigDecimal balanceAfter = acc.getBalance();
+                if (oldT.getAccountId() == accountId) {
+                    // Nếu cùng tài khoản, hoàn tác số tiền cũ trước
+                    if ("EXPENSE".equals(oldT.getType())) {
+                        balanceAfter = balanceAfter.add(oldT.getAmount());
+                    } else {
+                        balanceAfter = balanceAfter.subtract(oldT.getAmount());
+                    }
+                }
+                // Áp dụng số tiền chi tiêu mới
+                balanceAfter = balanceAfter.subtract(amount);
+                if (balanceAfter.compareTo(BigDecimal.ZERO) < 0) {
+                    return "Số dư tài khoản không đủ để thực hiện chi tiêu này.";
+                }
+            }
+        }
+
+        // Kiểm tra xem hoàn tác tài khoản cũ có làm số dư tài khoản cũ âm không (khi đổi tài khoản hoặc đổi loại)
+        if (oldT.getAccountId() != accountId && "INCOME".equals(oldT.getType())) {
+            Account oldAcc = accountDAO.findById(oldT.getAccountId());
+            if (oldAcc != null && oldAcc.getBalance().compareTo(oldT.getAmount()) < 0) {
+                return "Số dư của tài khoản cũ không đủ để hoàn tác giao dịch này.";
+            }
+        }
+
         Transaction newT = new Transaction();
         newT.setTransactionId(transactionId);
         newT.setAccountId(accountId);
