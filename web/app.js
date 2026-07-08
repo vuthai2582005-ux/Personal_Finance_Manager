@@ -90,16 +90,33 @@ function initEventListeners() {
         });
     });
 
-    // Định dạng số khi gõ tiền tệ (Form Account, Transaction, Budget)
+    // Định dạng số khi gõ tiền tệ (Form Account, Transaction, Budget) - Đã sửa lỗi xung đột bộ gõ tiếng Việt
     ['acc-balance', 'trans-amount', 'budget-limit'].forEach(id => {
         const input = document.getElementById(id);
-        input.addEventListener('input', () => {
-            let value = input.value.replace(/\D/g, "");
-            if (value !== "") {
-                input.value = new Intl.NumberFormat('vi-VN').format(value);
+        if (!input) return;
+
+        // 1. Khi người dùng click vào ô nhập liệu: Bỏ định dạng dấu chấm để nhập/sửa số thuần túy
+        input.addEventListener('focus', () => {
+            const cleanVal = input.value.replace(/\D/g, "");
+            input.value = cleanVal;
+        });
+
+        // 2. Chỉ cho phép nhập số thuần túy khi đang gõ
+        input.addEventListener('keypress', (e) => {
+            if (!/\d/.test(e.key)) {
+                e.preventDefault();
+            }
+        });
+
+        // 3. Khi bấm ra ngoài: Định dạng lại số tiền thành định dạng có dấu chấm phân cách hàng nghìn
+        input.addEventListener('blur', () => {
+            const cleanVal = input.value.replace(/\D/g, "");
+            if (cleanVal !== "") {
+                input.value = new Intl.NumberFormat('vi-VN').format(cleanVal);
             }
         });
     });
+
 
     // Link Thêm nhanh Giao dịch ở Dashboard
     document.getElementById('dash-add-trans-btn').addEventListener('click', () => {
