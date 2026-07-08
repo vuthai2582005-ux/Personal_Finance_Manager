@@ -71,6 +71,14 @@ public class TransactionController {
             return "Định dạng ngày không hợp lệ (yêu cầu dd/MM/yyyy).";
         }
 
+        // Kiểm tra số dư tài khoản có đủ không (đối với giao dịch CHI TIÊU)
+        if ("EXPENSE".equals(type)) {
+            Account acc = accountDAO.findById(accountId);
+            if (acc != null && acc.getBalance().compareTo(amount) < 0) {
+                return "Số dư tài khoản không đủ để thực hiện chi tiêu này.";
+            }
+        }
+
         Transaction t = new Transaction();
         t.setAccountId(accountId);
         t.setCategoryId(categoryId);
