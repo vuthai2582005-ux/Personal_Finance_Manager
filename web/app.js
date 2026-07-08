@@ -90,7 +90,7 @@ function initEventListeners() {
         });
     });
 
-    // Định dạng số khi gõ tiền tệ (Form Account, Transaction, Budget) - Đã sửa lỗi xung đột bộ gõ tiếng Việt
+    // Định dạng số khi gõ tiền tệ (Form Account, Transaction, Budget) - Đã sửa lỗi xung đột UniKey
     ['acc-balance', 'trans-amount', 'budget-limit'].forEach(id => {
         const input = document.getElementById(id);
         if (!input) return;
@@ -101,10 +101,11 @@ function initEventListeners() {
             input.value = cleanVal;
         });
 
-        // 2. Chỉ cho phép nhập số thuần túy khi đang gõ
-        input.addEventListener('keypress', (e) => {
-            if (!/\d/.test(e.key)) {
-                e.preventDefault();
+        // 2. Chỉ cho phép nhập số thuần túy bằng cách lọc sau khi nhập (An toàn cho UniKey, không dùng preventDefault)
+        input.addEventListener('input', () => {
+            const cleanVal = input.value.replace(/\D/g, "");
+            if (input.value !== cleanVal) {
+                input.value = cleanVal;
             }
         });
 
@@ -116,6 +117,7 @@ function initEventListeners() {
             }
         });
     });
+
 
 
     // Link Thêm nhanh Giao dịch ở Dashboard
