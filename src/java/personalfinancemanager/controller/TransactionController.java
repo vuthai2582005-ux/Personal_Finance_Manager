@@ -1,6 +1,8 @@
 package personalfinancemanager.controller;
 
+import personalfinancemanager.dao.AccountDAO;
 import personalfinancemanager.dao.TransactionDAO;
+import personalfinancemanager.model.Account;
 import personalfinancemanager.model.Transaction;
 import personalfinancemanager.util.DateUtil;
 import personalfinancemanager.util.ValidationUtil;
@@ -15,9 +17,11 @@ import java.util.List;
  */
 public class TransactionController {
     private final TransactionDAO transactionDAO;
+    private final AccountDAO accountDAO;
 
     public TransactionController() {
         this.transactionDAO = new TransactionDAO();
+        this.accountDAO = new AccountDAO();
     }
 
     /**
